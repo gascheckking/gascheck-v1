@@ -1,40 +1,80 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>GasCheck V1</title>
     <style>
-      body {
-        background: #111;
-        color: white;
-        font-family: sans-serif;
-        padding: 20px;
-      }
-      .safe {
-        color: lime;
-      }
+        body {
+            background: #111;
+            color: white;
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        .ethereum { color: #4DA6FF; } /* blå */
+        .base { color: #FFC300; }     /* gul */
+        .optimism { color: #FF4DD2; } /* rosa */
+        .up { color: red; }
+        .down { color: lime; }
+        .stable { color: gray; }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>GasCheck – Live Tracker</h1>
-    <p>Ethereum: <span class="safe">9.2 gwei</span> ✅ SAFE</p>
-    <p>Base: <span class="safe">0.15 gwei</span> ✅ SAFE</p>
-    <p>Optimism: <span class="safe">1.2 gwei</span> ✅ SAFE</p>
-    
-    <!-- Tidsskriften konverteras här -->
+
+    <p>Ethereum: <span id="ethereum" class="ethereum">9.2 gwei</span></p>
+    <p>Base: <span id="base" class="base">0.15 gwei</span></p>
+    <p>Optimism: <span id="optimism" class="optimism">1.2 gwei</span></p>
+
     <p id="updatedTime"></p>
 
     <script>
-      // Get UTC time
-      let updatedTime = "2025-05-09 09:58 UTC";  // Replace this with your dynamic time
+        let previousValues = {
+            ethereum: 9.2,
+            base: 0.15,
+            optimism: 1.2
+        };
 
-      // Create a Date object
-      let utcDate = new Date(updatedTime);
+        // Simulera slumpvis förändring tills vi har API-koppling
+        function simulateGasChange(value) {
+            const change = (Math.random() - 0.5) * 0.2; // slumpmässig liten ändring
+            return Math.max(0, (value + change).toFixed(2));
+        }
 
-      // Convert to Europe/Stockholm time (for CET/CEST)
-      let localTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' });
+        function updateGasFees() {
+            ['ethereum', 'base', 'optimism'].forEach(network => {
+                const element = document.getElementById(network);
+                const oldValue = previousValues[network];
+                const newValue = simulateGasChange(oldValue);
 
-      // Display the time in your page
-      document.getElementById('updatedTime').innerText = "Uppdaterad: " + localTime;
+                if (newValue > oldValue) {
+                    element.className = network + " up";
+                } else if (newValue < oldValue) {
+                    element.className = network + " down";
+                } else {
+                    element.className = network + " stable";
+                }
+
+                element.innerText = newValue + " gwei";
+                previousValues[network] = parseFloat(newValue);
+            });
+
+            updateLocalTime();
+        }
+
+        function updateLocalTime() {
+            const now = new Date();
+            const localTime = now.toLocaleString('sv-SE', {
+                timeZone: 'Europe/Stockholm',
+                hour12: false
+            });
+            document.getElementById('updatedTime').innerText = "Updated: " + localTime;
+        }
+
+        // Initial körning
+        updateGasFees();
+
+        // Uppdatera varje sekund
+        setInterval(updateGasFees, 1000);
     </script>
-  </body>
+</body>
 </html>
