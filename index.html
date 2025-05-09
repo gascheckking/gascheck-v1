@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>GasCheck V1</title>
-  <style>
-    body { background: #111; color: white; font-family: sans-serif; padding: 20px; }
-    .safe { color: lime; }
-  </style>
-</head>
-<body>
-  <h1>GasCheck – Live Tracker</h1>
-  <p>Ethereum: <span class="safe">9.2 gwei ✅ SAFE</span></p>
-  <p>Base: <span class="safe">0.15 gwei ✅ SAFE</span></p>
-  <p>Optimism: <span class="safe">1.2 gwei ✅ SAFE</span></p>
-  <p>Uppdaterad: 2025-05-09 09:58 UTC</p>
-</body>
+  <head>
+    <title>GasCheck V1</title>
+    <style>
+      body {
+        background: #111;
+        color: white;
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      .safe {
+        color: lime;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GasCheck – Live Tracker</h1>
+    <p>Ethereum: <span class="safe">9.2 gwei</span> ✅ SAFE</p>
+    <p>Base: <span class="safe">0.15 gwei</span> ✅ SAFE</p>
+    <p>Optimism: <span class="safe">1.2 gwei</span> ✅ SAFE</p>
+    
+    <!-- Tidsskriften konverteras här -->
+    <p id="updatedTime"></p>
+
+    <script>
+      // Get UTC time
+      let updatedTime = "2025-05-09 09:58 UTC";  // Replace this with your dynamic time
+
+      // Create a Date object
+      let utcDate = new Date(updatedTime);
+
+      // Convert to Europe/Stockholm time (for CET/CEST)
+      let localTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm' });
+
+      // Display the time in your page
+      document.getElementById('updatedTime').innerText = "Uppdaterad: " + localTime;
+    </script>
+  </body>
 </html>
